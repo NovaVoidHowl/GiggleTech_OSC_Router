@@ -1,0 +1,40 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v6.0.0
+  hooks:
+  - id: check-toml
+  - id: pretty-format-json
+    args: [--autofix, --indent, '2']
+  - id: check-yaml
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+    exclude: |
+      (?x)^(
+        .*\.meta$
+      )$
+  - id: check-toml
+- repo: https://github.com/executablebooks/mdformat
+  rev: 0.7.22
+  hooks:
+  - id: mdformat
+    exclude: |
+      (?x)^(
+        LICENSE
+      )$
+    additional_dependencies: [mdformat-gfm, mdformat-frontmatter]
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: v2.15.0
+  hooks:
+  - id: pretty-format-yaml
+    args: [--autofix, --indent, '2', --line-width, '120']
+    exclude: |
+      (?x)^(
+        .*\.meta$
+      )$
+- repo: https://github.com/pycqa/flake8
+  rev: 5.0.4
+  hooks:
+  - id: flake8
+
+# exclude dist directory
+exclude: ^dist/
