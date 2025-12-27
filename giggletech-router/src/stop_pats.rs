@@ -1,7 +1,7 @@
 /*
     stop_pats.rs - Sending Stop Signal for GiggleTech Devices
 
-    This module is responsible for sending a stop signal (`0i32`) to the device 
+    This module is responsible for sending a stop signal (`0i32`) to the device
     five times in quick succession to ensure the motor stops.
 
     **Key Features:**
@@ -18,6 +18,7 @@ use async_std::sync::Arc;
 use crate::giggletech_osc;
 use crate::config::DeviceConfig;
 
+#[allow(dead_code)]
 pub async fn stop_pats(device: DeviceConfig) -> Result<()> {
     let device_ip = Arc::new(device.device_uri.clone());  // Use the device URI
 

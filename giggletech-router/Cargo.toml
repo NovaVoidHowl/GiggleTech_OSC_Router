@@ -1,6 +1,6 @@
 [package]
 name = "async-osc"
-version = "1.0.0"
+version = "1.5.2"
 description = "Heavy Modded Async "
 readme = "README.md"
 edition = "2018"

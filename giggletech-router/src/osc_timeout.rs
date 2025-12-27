@@ -38,7 +38,7 @@ lazy_static! {
 pub async fn osc_timeout(device_ip: &str, timeout: u64) -> Result<()> {
     loop {
         async_std::task::sleep(Duration::from_secs(1)).await;
-        
+
         // Handle mutex lock safely
         let elapsed_time = match DEVICE_LAST_SIGNAL_TIME.lock() {
             Ok(guard) => {
@@ -52,7 +52,7 @@ pub async fn osc_timeout(device_ip: &str, timeout: u64) -> Result<()> {
                 continue;
             }
         };
-        
+
         if elapsed_time >= Duration::from_secs(timeout) {
             match giggletech_osc::send_data(device_ip, 0i32).await {
                 Ok(_) => {
@@ -63,7 +63,7 @@ pub async fn osc_timeout(device_ip: &str, timeout: u64) -> Result<()> {
                     eprintln!("Timeout: Failed to send stop signal to {}: {}", device_ip, e);
                 }
             }
-            
+
             // Update the last signal time safely
             if let Ok(mut device_last_signal_times) = DEVICE_LAST_SIGNAL_TIME.lock() {
                 device_last_signal_times.insert(device_ip.to_string(), Instant::now());

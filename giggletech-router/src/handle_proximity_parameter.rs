@@ -1,8 +1,8 @@
 /*
     handle_proximity_parameter.rs - Handling Proximity Data for GiggleTech Devices
 
-    This module processes proximity sensor data and controls device actions (like motors) based on 
-    the proximity values. It tracks the last proximity signal for each device and manages sending 
+    This module processes proximity sensor data and controls device actions (like motors) based on
+    the proximity values. It tracks the last proximity signal for each device and manages sending
     commands to the device via OSC.
 
     **Key Features:**
@@ -53,7 +53,7 @@ pub(crate) async fn handle_proximity_parameter(
 
     let device_ip = Arc::new(device.device_uri.clone());
 
-    // Update Last Signal Time for timeout clock 
+    // Update Last Signal Time for timeout clock
     let mut device_last_signal_times = osc_timeout::DEVICE_LAST_SIGNAL_TIME.lock().unwrap();
     // let last_signal_time: Option<Instant> = device_last_signal_times.get(&device_ip.to_string()).copied();
     let last_signal_time = device_last_signal_times.insert(device_ip.to_string(), Instant::now());
@@ -65,7 +65,7 @@ pub(crate) async fn handle_proximity_parameter(
         terminator::start(running.clone(), &device_ip).await?;
 
         for _ in 0..5 {
-            giggletech_osc::send_data(&device_ip, 0i32).await?;  
+            giggletech_osc::send_data(&device_ip, 0i32).await?;
         }
     } else {
         if !device.use_velocity_control {

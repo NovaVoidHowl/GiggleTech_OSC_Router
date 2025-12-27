@@ -3,14 +3,14 @@
 
     This module is designed to validate and parse a YAML configuration file for a system that involves
     both global (`setup`) and device-specific (`devices`) settings. It provides robust error handling
-    and validation to ensure the configuration file adheres to the expected structure and contains 
+    and validation to ensure the configuration file adheres to the expected structure and contains
     all required fields.
 
     ## Features
 
     1. **YAML Structure Validation:**
        - Parses the YAML file into a generic structure using `serde_yaml::Value`.
-       - Identifies syntax issues, such as missing colons (`:`) or malformed mappings, and provides 
+       - Identifies syntax issues, such as missing colons (`:`) or malformed mappings, and provides
          detailed error messages, including the line number and context of the problem.
 
     2. **Field Validation:**
@@ -70,10 +70,12 @@
 
 
 use serde::Deserialize;
-use serde_yaml::{self, Error};
+use serde_yaml;
 use std::fs;
 
 // Define the structure of your YAML configuration
+// These structs are used for YAML validation/deserialization
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct Setup {
     pub port_rx: String,
@@ -88,6 +90,7 @@ pub struct Setup {
     pub default_velocity_scalar: Option<u32>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct Device {
     pub ip: String,
@@ -101,6 +104,7 @@ pub struct Device {
     pub velocity_scalar: Option<u32>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub devices: Vec<Device>,

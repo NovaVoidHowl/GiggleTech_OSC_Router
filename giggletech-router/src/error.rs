@@ -1,7 +1,7 @@
 /*
     error.rs - Error Handling for OSC Operations
 
-    This module defines the `Error` enum to handle errors during OSC communication and a `Result<T>` 
+    This module defines the `Error` enum to handle errors during OSC communication and a `Result<T>`
     type alias for functions that may return these errors.
 
     **Key Features:**
@@ -19,6 +19,7 @@
     - Propagate errors using the `?` operator for clean error handling.
 */
 
+/// Errors that can occur during OSC operations
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
     /// IO error
