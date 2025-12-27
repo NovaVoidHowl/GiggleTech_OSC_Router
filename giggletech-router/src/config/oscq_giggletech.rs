@@ -1,26 +1,26 @@
 /*
     Giggletech OSCQuery Server Initialization and Management Module
 
-    This Rust module handles the initialization, management, and monitoring of the `giggletech_oscq.exe` process. The process is responsible 
-    for running the Giggletech OSCQuery server. The module reads the necessary configuration from a YAML file, starts the OSCQuery server, 
-    and retrieves the UDP port used for communication. If the process fails to start or the UDP port isn't valid, the process is restarted 
+    This Rust module handles the initialization, management, and monitoring of the `giggletech_oscq.exe` process. The process is responsible
+    for running the Giggletech OSCQuery server. The module reads the necessary configuration from a YAML file, starts the OSCQuery server,
+    and retrieves the UDP port used for communication. If the process fails to start or the UDP port isn't valid, the process is restarted
     automatically until a valid UDP port is retrieved.
 
     **Main Components:**
     1. **Config Reading:**
        - The configuration (e.g., the HTTP port) is read from a YAML file located in `AppData\Local\Giggletech\config_oscq.yml`.
-    
+
     2. **Process Management:**
-       - The Giggletech OSCQuery server process (`giggletech_oscq.exe`) is started by `run_giggletech()`, and its starting directory 
+       - The Giggletech OSCQuery server process (`giggletech_oscq.exe`) is started by `run_giggletech()`, and its starting directory
          is displayed in the console.
        - If the process fails to retrieve a valid UDP port or stops running, it is restarted automatically.
 
     3. **UDP Port Retrieval:**
-       - The function `get_udp_port()` retrieves the UDP port from the OSCQuery server via an HTTP request. If the port is invalid (i.e., 0), 
+       - The function `get_udp_port()` retrieves the UDP port from the OSCQuery server via an HTTP request. If the port is invalid (i.e., 0),
          a start command is sent using `start_server()` to initialize the server properly.
 
     4. **Main Initialization Loop:**
-       - The main function `initialize_and_get_udp_port()` continuously checks the UDP port, restarts the server process when necessary, 
+       - The main function `initialize_and_get_udp_port()` continuously checks the UDP port, restarts the server process when necessary,
          and returns the valid port once retrieved.
 
     **How It Works:**
@@ -38,7 +38,6 @@
 
 
 use std::fs;
-use std::path::PathBuf;
 use std::process::{Command, Child};
 use std::thread::sleep;
 use std::time::Duration;
@@ -50,7 +49,8 @@ use serde_yaml;
 // Struct to deserialize the YAML config
 #[derive(Debug, Deserialize)]
 struct Config {
-    httpPort: u16,
+    #[serde(rename = "httpPort")]
+    http_port: u16,
 }
 
 // Function to read and parse the YAML config file
@@ -107,11 +107,11 @@ pub fn initialize_and_get_udp_port() -> i32 {
 
     // Step 3: Loop until we get a non-zero UDP port
     loop {
-        match get_udp_port(config.httpPort) {
+        match get_udp_port(config.http_port) {
             Ok(0) => {
                 // If UDP port is 0, send the start command
                 println!("UDP port is 0, sending start command...");
-                if let Err(e) = start_server(config.httpPort) {
+                if let Err(e) = start_server(config.http_port) {
                     eprintln!("Failed to start server: {}", e);
                 }
             }

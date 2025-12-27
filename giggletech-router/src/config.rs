@@ -1,13 +1,13 @@
 /*
     config.rs - Configuration Module for Giggletech VRChat OSC System
 
-    This module is responsible for loading, parsing, and managing the configuration settings 
-    for the VRChat OSC-based system. It reads configuration from a `config.yml` file, processes 
-    both global and device-specific settings, and manages important parameters like OSC ports, 
+    This module is responsible for loading, parsing, and managing the configuration settings
+    for the VRChat OSC-based system. It reads configuration from a `config.yml` file, processes
+    both global and device-specific settings, and manages important parameters like OSC ports,
     speed, proximity, and velocity control. It also supports dynamic port retrieval via OSCQuery.
 
     **Key Features:**
-    
+
     1. **Loading Configuration (`load_config`)**:
        - Reads the `config.yml` file and parses it into a structure using YAML.
        - Extracts global and device-specific settings.
@@ -23,17 +23,17 @@
 
     3. **Device-Specific Configuration (`DeviceConfig`)**:
        - Each device can have custom parameters, but if not specified, they inherit from global settings.
-       - The function `parse_device_config` processes each device's configuration, allowing custom IP addresses, 
+       - The function `parse_device_config` processes each device's configuration, allowing custom IP addresses,
          speed settings, and proximity parameters for each individual device.
 
     **Dynamic Port Management with OSCQuery**:
-    - If the configuration specifies `"OSCQuery"` for `port_rx`, the module uses the `oscq_giggletech` helper 
+    - If the configuration specifies `"OSCQuery"` for `port_rx`, the module uses the `oscq_giggletech` helper
       to dynamically retrieve the UDP port from the OSCQuery service. If not, a static port number from the config is used.
 
     **Usage**:
-    - After parsing the configuration, the module initializes the devices and starts listening for OSC messages 
+    - After parsing the configuration, the module initializes the devices and starts listening for OSC messages
       on the specified port. It supports multiple devices, each with their unique or global configurations.
-    
+
     **Example Configurations**:
     ```yaml
     setup:
@@ -67,7 +67,7 @@ use chrono::Local; // For timestamps
 
 mod yaml_validator;
 
-use yaml_validator::{validate_yaml, Config};
+use yaml_validator::validate_yaml;
 
 
 fn log_to_file(message: &str) {
@@ -95,7 +95,7 @@ fn banner_txt(){
     println!(" █▄█ ▄█ █▄▄   █▀▄ █▄█ █▄█  █  ██▄ █▀▄");
     println!("");
     println!(" v1.4.0");
-                                                                                
+
 }
 
 #[derive(Clone, Debug)]
@@ -134,6 +134,7 @@ struct YamlHashWrapper {
 }
 
 impl YamlHashWrapper {
+    #[allow(dead_code)]
     fn has_key(&self, key: &str) -> bool {
         self.yaml_hash.contains_key(&Yaml::String(key.to_string()))
     }
@@ -195,16 +196,16 @@ pub(crate) fn load_config() -> Result<(GlobalConfig, Vec<DeviceConfig>), String>
         Err(why) => return Err(format!("Failed to parse YAML: {}", why)),
         Ok(yaml_data) => yaml_data
     };
-    
+
     if config.len() != 1 {
         return Err("Only 1 element should be in the yaml file".to_string());
     }
-    
+
     let map = match config.first().unwrap().as_hash() {
         Some(hash) => hash,
         None => return Err("Expected config to be a map at the top level".to_string()),
     };
-    
+
     let setup = match map.get(&Yaml::String("setup".to_string())) {
         Some(setup_yaml) => match setup_yaml.as_hash() {
             Some(setup_hash) => setup_hash,
@@ -212,7 +213,7 @@ pub(crate) fn load_config() -> Result<(GlobalConfig, Vec<DeviceConfig>), String>
         },
         None => return Err("Missing setup section".to_string()),
     };
-    
+
     let setup = YamlHashWrapper {yaml_hash: setup.clone()};
     let global_config = parse_global_config(setup);
 
@@ -223,7 +224,7 @@ pub(crate) fn load_config() -> Result<(GlobalConfig, Vec<DeviceConfig>), String>
         },
         None => return Err("Missing devices section".to_string()),
     };
-    
+
     let mut device_configs = Vec::new();
     for (i, dev) in devices.iter().enumerate() {
         let device_hash = match dev.as_hash() {
@@ -374,7 +375,7 @@ fn parse_device_config(device_data: YamlHashWrapper, global_config: &GlobalConfi
     if min_speed < 0.0 {
         return Err("Min speed cannot be negative".to_string());
     }
-    
+
     let max_speed = device_data.get_f64("max_speed").map(|x| (x as f32 / 100.0).max(min_speed).max(global_config.minimum_max_speed)).unwrap_or(global_config.default_max_speed);
     let start_tx = device_data.get_i64("start_tx").map(|x| x as i32).unwrap_or(global_config.default_start_tx);
     let speed_scale = device_data.get_f64("speed_scale").map(|x| x as f32 / 100.0).unwrap_or(global_config.default_speed_scale);
