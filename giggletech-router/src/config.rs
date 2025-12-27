@@ -94,7 +94,7 @@ fn banner_txt(){
     println!(" █▀█ █▀ █▀▀   █▀█ █▀█ █ █ ▀█▀ █▀▀ █▀█");
     println!(" █▄█ ▄█ █▄▄   █▀▄ █▄█ █▄█  █  ██▄ █▀▄");
     println!("");
-    println!(" v1.4.0");
+    println!(" v1.5.2");
 
 }
 
