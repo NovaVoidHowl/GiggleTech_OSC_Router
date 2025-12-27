@@ -7,7 +7,7 @@
     timeouts, error handling, and resource management.
 
     **Key Features:**
-    
+
     1. **Connection Manager**: Tracks connection statistics and manages socket lifecycle
     2. **Timeout Handling**: Proper timeouts for connection and send operations
     3. **Error Recovery**: Graceful handling of network errors
@@ -55,10 +55,10 @@ impl ConnectionManager {
             success_count: 0,
             error_count: 0,
         });
-        
+
         info.last_used = Instant::now();
         info.connection_count += 1;
-        
+
         if success {
             info.success_count += 1;
         } else {
@@ -71,13 +71,13 @@ impl ConnectionManager {
         let timeout = Duration::from_secs(300); // 5 minutes
         let now = Instant::now();
         let mut connections = self.connections.write().await;
-        
+
         let before_count = connections.len();
         connections.retain(|_, info| {
             now.duration_since(info.last_used) < timeout
         });
         let after_count = connections.len();
-        
+
         if before_count != after_count {
             println!("Cleaned up {} stale connections", before_count - after_count);
         }
@@ -133,7 +133,7 @@ pub(crate) async fn start_connection_manager() {
 // Send data with proper connection management and timeouts
 pub(crate) async fn send_data(device_ip: &str, value: i32) -> Result<()> {
     let socket_address = create_socket_address(device_ip, "8888");
-    
+
     // Create socket with connection timeout
     let socket = match async_std::future::timeout(
         Duration::from_secs(2), // 2 second connection timeout
@@ -197,7 +197,7 @@ pub(crate) async fn print_connection_stats() {
         println!("\n=== Connection Statistics ===");
         for (device_ip, (total, success, errors)) in stats {
             let success_rate = if total > 0 { (success as f32 / total as f32) * 100.0 } else { 0.0 };
-            println!("  {}: {} total, {} success, {} errors ({:.1}% success rate)", 
+            println!("  {}: {} total, {} success, {} errors ({:.1}% success rate)",
                 device_ip, total, success, errors, success_rate);
         }
         println!("=============================\n");

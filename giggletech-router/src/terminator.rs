@@ -1,7 +1,7 @@
 /*
     terminator.rs - Control Start/Stop Worker for Device Shutdown
 
-    This module is responsible for managing a worker that sends stop signals (`0`) to devices in regular intervals 
+    This module is responsible for managing a worker that sends stop signals (`0`) to devices in regular intervals
     when certain conditions are met (such as proximity signals stopping). It can start or stop the worker as needed.
 
     **Key Features:**
@@ -15,11 +15,11 @@
 
     3. **Worker Task**:
        - The worker function runs in a loop, sending stop signals to the device while the worker is active.
-       - It sleeps for 1 second between each stop signal, ensuring the device continues to receive stop commands 
+       - It sleeps for 1 second between each stop signal, ensuring the device continues to receive stop commands
          until the worker is stopped.
 
     **Usage**:
-    - This module is used to continuously send stop signals to devices when needed, for instance, when a device 
+    - This module is used to continuously send stop signals to devices when needed, for instance, when a device
       should halt due to inactivity or the end of a proximity event.
     - The worker can be started or stopped based on the system state, using the `start` and `stop` functions.
 
